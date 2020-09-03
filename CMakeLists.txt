@@ -45,6 +45,9 @@ install(FILES ${FSEAM_HEADERS} DESTINATION include/FSeam)
 install(PROGRAMS ${FSEAM_GENERATOR_PYTH} DESTINATION share/bin)
 install(PROGRAMS ${FSEAM_GENERATOR_PYTH} DESTINATION bin)
 
+include(cmake/Conan.cmake)
+run_conan()
+
 # GNUInstallDirs "DATADIR" wrong here; CMake search path wants "share".
 set(FSEAM_CMAKECONFIG_INSTALL_DIR "share/cmake/${PROJECT_NAME}" CACHE STRING "install path for FSeamConfig.cmake")
 

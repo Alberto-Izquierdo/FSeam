@@ -8,6 +8,8 @@ option(FSEAM_CLEANUP_DATA "Cleanup the data file  " OFF)
 option(FSEAM_USE_CATCH2 "fseam catch2 usage" ON)
 option(FSEAM_USE_GTEST "fseam catch2 usage" OFF)
 
+include(${CMAKE_BINARY_DIR}/conan_paths.cmake)
+
 if (FSEAM_USE_CATCH2)
     find_package(Catch2 REQUIRED)
     include(Catch)
