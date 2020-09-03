@@ -28,12 +28,12 @@ addons:
 
 before_install:
   - sudo apt-get update -qq
-  - sudo apt-get install python3
+  - sudo apt-get install python3 python3-setuptools
   - pyenv install 3.6.3
   - pyenv global 3.6.3
   #FSeam Python generator dependencies
   - sudo apt-get install python3-pip
-  - sudo pip3 install ply
+  - sudo pip3 install ply conan
   - sudo pip3 install pip --upgrade
   - export PYTHONPATH=$PYTHONPATH:$(pwd):/usr/lib/python3/dist-packages:/usr/local/lib/python3.6/dist-packages
   - echo $PYTHONPATH
@@ -49,26 +49,15 @@ install:
 before_script:
   - python3.6 -m venv myenv
   - cd ${TRAVIS_BUILD_DIR}
-  #install catch2
-  - git clone https://github.com/catchorg/Catch2.git
-  - cd Catch2
-  - cmake -Bbuild -H. -DBUILD_TESTING=OFF -DPYTHON_LIBRARY=$(python-config --prefix)/lib/libpython3.so -DPYTHON_INCLUDE_DIR=$(python-config --prefix)/include/python3.6m -DPython3_EXECUTABLE=$(python-config --prefix)/bin/python3
-  - cd build && make
-  - sudo make install
-  - cd ../..
-
-  #catch2 dependency
-  - cd test/src
-  - curl -O https://raw.githubusercontent.com/catchorg/Catch2/v2.7.0/single_include/catch2/catch.hpp
-  - cd ../..
 
   # Use Debug builds for running Valgrind and building examples
   #  - cmake -H. -BBuild-Debug -DCMAKE_BUILD_TYPE=Debug -DTRAVIS_BUILD=ON
   # Don't bother with release build for coverage build
-  - cmake -H. -BBuild-Release -DCMAKE_BUILD_TYPE=Release -DTRAVIS_BUILD=ON -DPYTHON_LIBRARY=$(python-config --prefix)/lib/libpython3.so -DPYTHON_INCLUDE_DIR=$(python-config --prefix)/include/python3.6m -DPython3_EXECUTABLE=$(python-config --prefix)/bin/python3
+  - mkdir build && cd build
+  - cmake .. -DCMAKE_BUILD_TYPE=Release -DTRAVIS_BUILD=ON
 
 script:
-  - cd Build-Release
-  - make -j 2
+  - cd ${TRAVIS_BUILD_DIR}/build
+  - make -j${nproc}
   - make test
   
